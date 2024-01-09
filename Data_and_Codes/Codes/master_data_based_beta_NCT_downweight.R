@@ -1,6 +1,6 @@
 # load the required packages
-library(readxl)
-library(rjags)
+library(readxl)   
+library(rjags) 
 library(R2jags)
 library(tidyverse)
 library(curl)
@@ -16,13 +16,13 @@ library(nmajags)
 
 # load functions for the Codes file
 
-source("Codes\\helpers.R") ## read the helpers file
+source("./Codes/helpers.R") ## read the helpers file
 
-source("Codes\\pairwiseMA_data_expert_based_priors.R") ## pairwise meta-analysis model to construct the priors for the location parameter using the data based approach
+source("./Codes/pairwiseMA_data_expert_based_priors.R") ## pairwise meta-analysis model to construct the priors for the location parameter using the data based approach
 
-source("Codes\\NMA_model_data_based_beta.R") ## NMA model for the first stage
+source("./Codes/NMA_model_data_based_beta.R") ## NMA model for the first stage
 
-source("Codes\\NMA_model_with_informative_priors.R") ## NMA model for the second stage
+source("./Codes/NMA_model_with_informative_priors.R") ## NMA model for the second stage
 
 '%!in%' = function(x, y)  ! ('%in%'(x, y))
  
@@ -31,7 +31,7 @@ set.seed(1995)
 
 # read the data
 all.data =
-  read_excel("Data\\data.xlsx",
+  read_excel("./Data/data.xlsx",
              na = c("", " ")) 
 
 # create different datasets for the two populations
@@ -347,7 +347,7 @@ tau_GP = GP.results %>%
 
 # keep only the useful columns
 tau_GP = tau_GP %>%
-  select("mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat")
+  dplyr::select("mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat")
 
 # create a vector with the names of all common basic comparisons between GP and CA
 common_comparisonsGP = c(
@@ -394,9 +394,9 @@ basic_pred_commonGP_CA$comparisons = common_comparisonsGP
 # add precision calculated as 1/var(SMD)
 basic_pred_commonGP_CA$prec = (1 / basic_pred_commonGP_CA$sd) ^ 2
 
-# select only the useful columns
+# dplyr::select only the useful columns
 basic_pred_commonGP_CA = basic_pred_commonGP_CA %>%
-  select("mean",
+  dplyr::select("mean",
          "sd",
          "2.5%",
          "50%",
@@ -503,7 +503,7 @@ tau_CA = CA.results %>%
 
 # keep only the useful columns
 tau_CA = tau_CA %>%
-  select("mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat")
+  dplyr::select("mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat")
 
 # exclude Placebo and tau from basic comparion data
 basic_comp_CA = basic_comp_CA %>%
@@ -533,7 +533,7 @@ basic_comp_CA$comparisons = comparisonsCA
 
 # keep only the useful columns
 basic_comp_CA = basic_comp_CA %>%
-  select("mean",
+  dplyr::select("mean",
          "sd",
          "2.5%",
          "50%",
@@ -563,7 +563,7 @@ SucrasCA = CA.results %>%
 
 # keep only the useful columns
 SucrasCA = SucrasCA %>%
-  select("mean", "sd", "2.5%", "97.5%")
+  dplyr::select("mean", "sd", "2.5%", "97.5%")
 
 # create a vector with the drug names
 treats = c(
@@ -617,14 +617,14 @@ row.names(league_table) = treats
 
 # These results are part of the "basic_comparisons_all.xlsx" file in the "Intermediate results" folder
 write.csv(basic_comp_CA,
-          "Results\\data_based_beta_NCT_DW.csv",
+          "./Results/data_based_beta_NCT_DW.csv",
           row.names = F)
 
 # These results are part of the "SUCRAS.xlsx" file in the "Intermediate results" folder
 write.csv(SucrasCA,
-          "Results\\SUCRA_data_based_beta_NCT_DW.csv",
+          "./Results/SUCRA_data_based_beta_NCT_DW.csv",
           row.names = F)
 
 write.csv(league_table,
-          "Results\\Supporting_table_13.csv",
+          "./Results/Supporting_table_13.csv",
           row.names = F)

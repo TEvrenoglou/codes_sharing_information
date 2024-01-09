@@ -1,18 +1,18 @@
-library(tidyverse)
+library(tidyverse)    
 library(ggplot2)
 library(ggsci)
 library(readxl)
 
 ## intermediate results with the posterior samples to reproduce Figure 2 of the main paper and Figures 2-7 of the Appendix 1
 
-basic_comparisons <- read_excel("Intermediate results\\basic_comparisons_all.xlsx")
+basic_comparisons <- read_excel("./Intermediate Results/basic_comparisons_all.xlsx")
 
-posterior_samples <- read_excel("Intermediate results\\posterior_samples.xlsx")
+posterior_samples <- read_excel("./Intermediate Results/posterior_samples.xlsx")
 
-sucras <- read_excel("Intermediate results\\SUCRAS.xlsx")
+sucras <- read_excel("./Intermediate Results/SUCRAS.xlsx")
 
 ## read the functions to reproduce the graphs
-source("Codes\\helpers.R")
+source("./Codes/helpers.R")
 
 ### main paper, Figure 2
 forest_plot(basic_comparisons)

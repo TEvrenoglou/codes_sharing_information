@@ -1,4 +1,4 @@
-library(readxl)
+library(readxl) 
 library(rjags)
 library(R2jags)
 library(tidyverse)
@@ -8,18 +8,18 @@ library(devtools)
 library(nmajags)
 
 
-source("Codes\\NMA_model_node_splitting.R")
+source("./Codes/NMA_model_node_splitting.R")
 
-source("Codes\\helpers.R")
+source("./Codes/helpers.R")
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
 # read the data
 all.data =
-  read_excel("Data\\data.xlsx",
+  read_excel("./Data/data.xlsx",
              na = c("", " ")) 
 priors =
-  read_excel("Intermediate results\\priors.xlsx",
+  read_excel("./Intermediate results/priors.xlsx",
              na = c("", " "))
 
 

@@ -1,82 +1,82 @@
 
 settings.consistency <- function(data,priors,treat1,treat2,beta.setting,downweight.setting,expand=F){
   
-trts <- levels(as.factor(data$Drug))  
-
-pair1 <- which(trts==treat1)
-
-pair2 <- which(trts==treat2)
-
-if(expand==T){
-
-comparison_expand <- cbind.data.frame(trts[-pair2],trts[pair2])
-
-names(comparison_expand) <- c("treat1","treat2")
-
-comparisons_expand <- paste(comparison_expand$treat1,comparison_expand$treat2,sep = " vs ")
-
-priors_expand <- matrix(ncol = 5,nrow=length(comparisons_expand))
-
-priors_expand <- as.data.frame(priors_expand)
-
-priors_expand[,1] <- comparisons_expand
+  trts <- levels(as.factor(data$Drug))  
   
-priors_expand[,2] <- 0
-
-priors_expand[,3] <- 1/1000
-
-priors_expand[,4] <- "none"
-
-priors_expand[,5] <- "none"
-
-names(priors_expand) <- names(priors)
-
-}
-
-sign <- NA
-
-if(pair1<pair2){
-  sign=1
-}else{
-  sign=0
-}
-
-pair <- c(pair1,pair2)
-
-comp <- paste(treat1,"vs",treat2,sep=" ")  
-
-if(expand==F){
-prior <- priors %>% 
-  filter(beta==beta.setting) %>% 
-  filter(downweight==downweight.setting)
-}else{
-  prior <- priors_expand %>% 
-    filter(beta==beta.setting) %>% 
-    filter(downweight==downweight.setting)  
-}
-
-
-E <- which(prior$comparison==comp)
-
-direct_mean <- prior$mean[E]
-
-direct_prec <- prior$prec[E]
-
-prior$mean[E] <- 0
-
-prior$prec[E] <- 0.0001
-
-prior <- as.data.frame(prior)
-
-res <- list("comparison" = comp,
-            "priors" = prior,
-            "direct_mean" = direct_mean,
-            "direct_prec" = direct_prec,
-            "pair" = pair,
-            "sign" = sign
-            )
-
-return(res)
+  pair1 <- which(trts==treat1)
+  
+  pair2 <- which(trts==treat2)
+  
+  if(expand==T){
+    
+    comparison_expand <- cbind.data.frame(trts[-pair2],trts[pair2])
+    
+    names(comparison_expand) <- c("treat1","treat2")
+    
+    comparisons_expand <- paste(comparison_expand$treat1,comparison_expand$treat2,sep = " vs ")
+    
+    priors_expand <- matrix(ncol = 5,nrow=length(comparisons_expand))
+    
+    priors_expand <- as.data.frame(priors_expand)
+    
+    priors_expand[,1] <- comparisons_expand
+    
+    priors_expand[,2] <- 0
+    
+    priors_expand[,3] <- 1/1000
+    
+    priors_expand[,4] <- "none"
+    
+    priors_expand[,5] <- "none"
+    
+    names(priors_expand) <- names(priors)
+    
+  }
+  
+  sign <- NA
+  
+  if(pair1<pair2){
+    sign=1
+  }else{
+    sign=0
+  }
+  
+  pair <- c(pair1,pair2)
+  
+  comp <- paste(treat1,"vs",treat2,sep=" ")  
+  
+  if(expand==F){
+    prior <- priors %>% 
+      filter(beta==beta.setting) %>% 
+      filter(downweight==downweight.setting)
+  }else{
+    prior <- priors_expand %>% 
+      filter(beta==beta.setting) %>% 
+      filter(downweight==downweight.setting)  
+  }
+  
+  
+  E <- which(prior$comparison==comp)
+  
+  direct_mean <- prior$mean[E]
+  
+  direct_prec <- prior$prec[E]
+  
+  prior$mean[E] <- 0
+  
+  prior$prec[E] <- 0.0001
+  
+  prior <- as.data.frame(prior)
+  
+  res <- list("comparison" = comp,
+              "priors" = prior,
+              "direct_mean" = direct_mean,
+              "direct_prec" = direct_prec,
+              "pair" = pair,
+              "sign" = sign
+  )
+  
+  return(res)
 }
 
 run_consistency_check <- function(data,
@@ -292,7 +292,7 @@ run_consistency_check <- function(data,
       filter(ind=="prob")
     
     P[[i]]=P[[i]] %>%
-      select(mean)
+      dplyr::select(mean)
     
     bayesian_pval[[i]]=2*min(P[[i]],1-P[[i]])
     
@@ -408,12 +408,12 @@ run_consistency_check <- function(data,
       
       if(expand==F){
         
-      basic_bugs_out[[i]] = bugs_out[[i]][,1:14]
-      
+        basic_bugs_out[[i]] = bugs_out[[i]][,1:14]
+        
       }else{
         
-      basic_bugs_out[[i]] = bugs_out[[i]][,1:33]
-      
+        basic_bugs_out[[i]] = bugs_out[[i]][,1:33]
+        
       }
       
       post_indirect[[i]] = basic_bugs_out[[i]][,which(names(basic_bugs_out[[i]]) == paste("SMD.ref[",pair1[[i]],"]",sep = ""))] 
@@ -467,11 +467,11 @@ run_consistency_check <- function(data,
   numerical_results <- bind_rows(data_paper, .id = "column_label")
   
   if(posterior.samples==T){
-  final_results <- list("results"=numerical_results,
-                        "posterior_samples"=density_data)
-  
-  final_results$results$column_label = NULL
-  
+    final_results <- list("results"=numerical_results,
+                          "posterior_samples"=density_data)
+    
+    final_results$results$column_label = NULL
+    
   }else{
     final_results <- list("results"=numerical_results)
     

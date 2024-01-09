@@ -1,5 +1,5 @@
 # load the required packages
-library(readxl)
+library(readxl)  
 library(rjags)
 library(R2jags)
 library(tidyverse)
@@ -16,9 +16,9 @@ library(nmajags)
 
 # load functions for the Codes file
 
-source("Codes\\helpers.R") ## read the helpers file 
+source("./Codes/helpers.R") ## read the helpers file 
 
-source("Codes\\standard_NMA_model.R") ## standard NMA model
+source("./Codes/standard_NMA_model.R") ## standard NMA model
 
 '%!in%' = function(x, y)   ! ('%in%'(x, y))
 
@@ -27,7 +27,7 @@ set.seed(1995)
 
 # load data
 all.data =
-  read_excel("Data\\data.xlsx",
+  read_excel("./Data/data.xlsx",
              na = c("", " "))
 
 # restrict data to contain only Children-Adolescent data
@@ -84,7 +84,7 @@ tau_CA = CA.results %>%
   filter(ind == "tau")
 
 tau_CA = tau_CA %>%
-  select("mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat")
+  dplyr::select("mean", "sd", "2.5%", "25%", "50%", "75%", "97.5%", "Rhat")
 
 #### Exclude Placebo and tau from basic comparion data
 basic_comp_CA = basic_comp_CA %>%
@@ -112,7 +112,7 @@ comparisonsCA = c(
 basic_comp_CA$comparisons = comparisonsCA
 
 basic_comp_CA = basic_comp_CA %>%
-  select("mean",
+  dplyr::select("mean",
          "sd",
          "2.5%",
          "50%",
@@ -132,7 +132,7 @@ SucrasCA = CA.results %>%
   filter(grepl("SUCRA", ind))
 
 SucrasCA = SucrasCA %>%
-  select("mean", "sd", "2.5%", "97.5%")
+  dplyr::select("mean", "sd", "2.5%", "97.5%")
 
 treats = c(
   "Aripiprazole",
@@ -180,13 +180,13 @@ league_table = league_table[treats, treats]
 ## These results are readily available in the "Intermediate Results" file 
 
 write.csv(basic_comp_CA,
-          "Results\\nma_non_informative_priors.csv",
+          "./Results/nma_non_informative_priors.csv",
           row.names = F)
 
 write.csv(SucrasCA,
-          "Results\\SUCRA_nma_non_informative_priors.csv",
+          "./Results/SUCRA_nma_non_informative_priors.csv",
           row.names = F)
 
 write.csv(league_table,
-          "Results\\Supporting_table_17.csv",
+          "./Results/Supporting_table_17.csv",
           row.names = F)
